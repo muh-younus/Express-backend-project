@@ -8,7 +8,7 @@ const app  = express();
 
 app.use(express.static(path.join(__dirname, "Frontend")))
 
-const post= [
+const posts= [
 {id: "1", title: "test1", type:"check"},
 {id: "2", title: "test2", type:"check"},
 {id: "3", title: "test3", type:"check"},
@@ -18,13 +18,34 @@ const post= [
 
 app.get('/api',(req,res) =>{
 
-    res.json(post)
+    const limit = parseInt(req.query.limit);
+
+    if(!isNaN(limit) && limit > 0){
+
+        res.json(post.slice(0, limit))
+    }
+    else{
+
+        res.json(post)
+
+    }
+
+    
 })
 
 app.get('/api/:id',(req,res) =>{
     
     const id = req.params.id;
-    res.json(post.find(p => p.id === id));
+    const post = posts.find(p => p.id === id);
+
+    if(!post){
+
+         res.status(404).json({error: `post is not found and the id is ${id}  `});
+    }
+    else{
+
+        res.status(200).json(post);
+    }
 })
 
 
