@@ -1,12 +1,12 @@
 const express = require("express")
 const path = require("path");
-const port =  process.env.PORT || 8000;
+// const port =  process.env.PORT || 8000;
 
 const app  = express();
 
 //setup static folder path
 
-app.use(express.static(path.join(__dirname, "Frontend")))
+// app.use(express.static(path.join(__dirname, "Frontend")))
 
 const posts= [
 {id: "1", title: "test1", type:"check"},
@@ -16,37 +16,40 @@ const posts= [
 
 ]
 
-app.get('/api',(req,res) =>{
 
-    const limit = parseInt(req.query.limit);
+
+//To set limit on json data
+app.get('/api/post/',(req,res) =>{
+
+    // console.log("API called");
+    let limit = parseInt(req.query.limit);
 
     if(!isNaN(limit) && limit > 0){
 
-        res.json(post.slice(0, limit))
+        res.status(200).json(posts.slice(0, limit))
+    }else{
+
+        res.status(200).json(posts)
     }
-    else{
-
-        res.json(post)
-
-    }
-
-    
+  
 })
 
-app.get('/api/:id',(req,res) =>{
-    
-    const id = req.params.id;
-    const post = posts.find(p => p.id === id);
+//now we get the data from id
 
-    if(!post){
+app.get('/api/post/:id/', (req, res) => {
+  console.log('req.params.id:', req.params.id,typeof req.params.id);
+  console.log('data:', posts);
 
-         res.status(404).json({error: `post is not found and the id is ${id}  `});
-    }
-    else{
+  let id = parseInt(req.params.id); //req.params.id;
+  const post1 = posts.find((item) => item.id === id);
 
-        res.status(200).json(post);
-    }
+  if (!post1) {
+    res.status(404).json({ message: `A port with the id of ${id} was not found` })
+  } else {
+    res.status(200).json(post1)
+  }
 })
 
 
-app.listen(port, ()=> console.log(`Server is running on port ${port}`));
+
+app.listen(8000, ()=> console.log(`Server is running on port 8000`));
