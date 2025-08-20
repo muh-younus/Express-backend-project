@@ -1,8 +1,13 @@
-const express = require("express")
-const path = require("path");
-const postRoutes = require('./routes/post.js');
+import express from "express";
+import path from "path";
+import postRoutes from "./routes/post.js";
+
 
 const app  = express();
+
+//Body parser Middleware
+app.use(express.json());
+app.use(express.urlencoded({extended: false}));
 
 //Routes
 app.use('/api/post',postRoutes);

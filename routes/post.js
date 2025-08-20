@@ -1,5 +1,5 @@
-const express = require('express')
-const router = require.Router();
+import express from "express";
+const router = express.Router();
 
 const posts= [
 {id: "1", title: "test1", type:"check"},
@@ -31,14 +31,24 @@ router.get('/:id', (req, res) => {
   console.log('req.params.id:', req.params.id,typeof req.params.id);
   console.log('data:', posts);
 
-  let id = parseInt(req.params.id); //req.params.id;
-  const post1 = posts.find((item) => item.id === id);
-
-  if (!post1) {
-    res.status(404).json({ message: `A port with the id of ${id} was not found` })
-  } else {
-    res.status(200).json(post1)
-  }
+  let id = req.params.id; //req.params.id;
+    const post1 = posts.find((item) => item.id === id);
+    console.log('post1:', post1);
+    res.status(200).json(post1);
 })
 
-module.exports = router;
+//create new post request
+
+router.post('/',(req,res) =>{
+
+    const newPost = {
+
+        id: posts.length +1,
+        title: req.body.title,
+        type: req.body.type
+    }
+    posts.push(newPost);
+    res.status(201).json(posts);
+})
+
+export default router;
